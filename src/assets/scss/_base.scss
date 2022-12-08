@@ -2,6 +2,18 @@ html {
   font-size: 62.5%;
 }
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-size: 1.6rem;
+  background-color: #0b172a;
+  color: white;
+}
+:root {
+  --pinkf6: #f62682;
+}
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 15px;
+  width: 100%;
+  max-width: 1280px;
 }
