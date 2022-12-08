@@ -1,3 +1,6 @@
+import { IHomeBanner } from "@types";
+import { tmdbAPI } from "apis/configAPI";
+import { useQuery } from "react-query";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -25,8 +28,8 @@ const StyledHomeBanner = styled.div`
   }
   .banner-content {
     position: absolute;
-    bottom: 60px;
-    left: 60px;
+    bottom: 40px;
+    left: 40px;
     z-index: 20;
   }
   .banner-heading {
@@ -54,30 +57,37 @@ const StyledHomeBanner = styled.div`
 `;
 
 const HomeBanner = () => {
+  const { isLoading, data } = useQuery("banner", () =>
+    fetch(tmdbAPI.getBanners).then((res) => res.json())
+  );
+  if (isLoading) return <>Loading</>;
+  const movies: IHomeBanner[] = data?.results || [];
   return (
     <StyledHomeBanner>
       <Swiper slidesPerView={1}>
-        <SwiperSlide>
-          <div className="banner">
-            <div className="banner-overlay" />
-            <img
-              alt=""
-              src="https://image.tmdb.org/t/p/original//1NqwE6LP9IEdOZ57NCT51ftHtWT.jpg"
-              className="banner-image"
-            />
-            <div className="banner-content">
-              <h2 className="banner-heading">Puss in Boots: The Last Wish</h2>
-              <ul className="banner-category">
-                <li>Comedy</li>
-                <li>Comedy</li>
-                <li>Comedy</li>
-              </ul>
-              <button type="button" className="banner-watch">
-                Watch Now
-              </button>
+        {movies.map((movie) => (
+          <SwiperSlide key={movie.id}>
+            <div className="banner">
+              <div className="banner-overlay" />
+              <img
+                alt={movie.title}
+                src={tmdbAPI.imageOriginal(movie.backdrop_path)}
+                className="banner-image"
+              />
+              <div className="banner-content">
+                <h2 className="banner-heading">{movie.title}</h2>
+                <ul className="banner-category">
+                  <li>Comedy</li>
+                  <li>Adventure</li>
+                  <li>Drama</li>
+                </ul>
+                <button type="button" className="banner-watch">
+                  Watch Now
+                </button>
+              </div>
             </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </StyledHomeBanner>
   );
